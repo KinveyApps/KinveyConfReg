@@ -20,6 +20,8 @@ For the best experience, you will need to pre-populate the following data in the
  * header.png (header image, 1024 x 72)
  * body.png (background image, 1024 x 672)
 
+This sample application is designed for iOS 5+, and uses storyboards and ARC. 
+
 This Application is licensed under Apache License 2.0.
 
 
