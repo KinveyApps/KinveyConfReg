@@ -20,6 +20,7 @@
 @synthesize industryPicker;
 @synthesize mainViewController;
 @synthesize query;
+@synthesize selection;
 
 - (id) initWithCoder:(NSCoder *)aDecoder
 {
@@ -63,7 +64,7 @@
 - (void) viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
+    [self.mainViewController setSelectedPopoverObject:self.selection query:self.query];
     [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
 }
 
@@ -86,12 +87,19 @@
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissPopover) object:nil];
     return [[_items objectAtIndex:row] getValueForProperty:@"name"];
+}
+
+- (void) dismissPopover
+{
+    [self.mainViewController hidePopover];
 }
 
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    [self.mainViewController hidePopoverWithSelectedObject:[_items objectAtIndex:row] query:self.query];
+    self.selection = [_items objectAtIndex:row];
+    [self performSelector:@selector(dismissPopover) withObject:nil afterDelay:2];
 }
 
 #pragma mark - loader
@@ -101,6 +109,18 @@
     [_items removeAllObjects];
     [_items addObjectsFromArray:result];
     [self.industryPicker reloadComponent:0];
+    NSUInteger idx = 0;
+    for (KCSEntityDict* d in result) {
+        if ([[d objectId] isEqualToString:self.selection]) {
+            break;
+        }
+        idx++;
+    }
+    if (idx == [result count]) {
+        //for the not found case, start at top
+        idx = 0;
+    }
+    [self.industryPicker selectRow:idx inComponent:0 animated:NO];
 }
 
 - (void) collection:(KCSCollection *)collection didFailWithError:(NSError *)error 

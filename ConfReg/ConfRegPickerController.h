@@ -15,6 +15,7 @@
     NSMutableArray* _items;
 }
 
+@property (weak, nonatomic) id selection;
 @property (weak, nonatomic) IBOutlet UIPickerView *industryPicker;
 @property (weak, nonatomic) ConfRegViewController* mainViewController;
 @property (nonatomic) NSString* query;

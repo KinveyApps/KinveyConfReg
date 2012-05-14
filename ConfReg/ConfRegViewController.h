@@ -25,7 +25,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *role;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 
-- (void) hidePopoverWithSelectedObject:(id)entity query:(NSString*)query;
+- (void) hidePopover;
+- (void) setSelectedPopoverObject:(id)entityObj query:(NSString*)query;
 
 - (IBAction)saveAttendee;
 

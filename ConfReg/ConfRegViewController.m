@@ -113,24 +113,37 @@
         //To make this work the segue identifier (set in the storyboard) must be the same as the Collection names in the Kinvey app console.
         //This sample app uses the Job-Roles and Industries collections to populate the spinner
         [(ConfRegPickerController*) segue.destinationViewController setQuery:segue.identifier];
+        
+        if ([segue.identifier isEqualToString:@"Job-Roles"]) {
+            [(ConfRegPickerController*) segue.destinationViewController setSelection:_attendee.roleId];
+        } else {
+            [(ConfRegPickerController*) segue.destinationViewController setSelection:_attendee.industryId];
+        }
+
+
     }
     [self.view endEditing:YES];
 }
 
-- (void) hidePopoverWithSelectedObject:(id)entityObj query:(NSString*)query
+- (void) hidePopover
 {
-    [_popover dismissPopoverAnimated:YES];
-    
-    KCSEntityDict* entity = (KCSEntityDict*)entityObj;
-    NSString* value = [entity getValueForProperty:@"name"];
-    NSString* valId = [entity objectId];
-    
-    if ([query isEqualToString:@"Job-Roles"]) {
-        self.role.text = value;
-        _attendee.roleId = valId;
-    } else {//TODO: check for other query values
-        self.industry.text = value;
-        _attendee.industryId = valId;
+     [_popover dismissPopoverAnimated:YES];
+}
+
+- (void) setSelectedPopoverObject:(id)entityObj query:(NSString*)query
+{
+    if ([entityObj isKindOfClass:[KCSEntityDict class]]) {
+        KCSEntityDict* entity = (KCSEntityDict*)entityObj;
+        NSString* value = [entity getValueForProperty:@"name"];
+        NSString* valId = [entity objectId];
+        
+        if ([query isEqualToString:@"Job-Roles"]) {
+            self.role.text = value;
+            _attendee.roleId = valId;
+        } else {//TODO: check for other query values
+            self.industry.text = value;
+            _attendee.industryId = valId;
+        }
     }
 }
 
