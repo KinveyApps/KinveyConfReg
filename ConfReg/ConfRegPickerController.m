@@ -44,7 +44,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.    
+	// Do any additional setup after loading the view.
 }
 
 - (void)viewDidUnload
@@ -56,8 +56,29 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    KCSCollection* industries = [[KCSClient sharedClient] collectionFromString:self.query withClass:[KCSEntityDict class]];
-    [industries fetchAllWithDelegate:self];
+    KCSCollection* industries = [[KCSClient sharedClient] collectionFromString:self.query withClass:[NSMutableDictionary class]];
+    KCSCachedStore* store = [KCSCachedStore storeWithCollection:industries options:@{ KCSStoreKeyCachePolicy : @(KCSCachePolicyLocalFirst)}];
+    [store queryWithQuery:[KCSQuery query] withCompletionBlock:^(NSArray *result, NSError *errorOrNil) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [_items removeAllObjects];
+        [_items addObjectsFromArray:result];
+        [self.industryPicker reloadAllComponents];
+        NSUInteger idx = 0;
+        for (NSDictionary* d in result) {
+            if ([[d kinveyObjectId] isEqualToString:self.selection]) {
+                break;
+            }
+            idx++;
+        }
+        if (idx == [result count]) {
+            //for the not found case, start at top
+            idx = 0;
+        }
+        if (idx < [result count]) {
+            [self.industryPicker selectRow:idx inComponent:0 animated:NO];
+        }
+        
+    } withProgressBlock:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:NO];
 }
 
@@ -77,18 +98,19 @@
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-    return 1;
+    return 1; //_items.count > 0 ? 1 : 0;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
+    assert(_items);
     return [_items count];
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismissPopover) object:nil];
-    return [[_items objectAtIndex:row] getValueForProperty:@"name"];
+    return [[_items objectAtIndex:row] valueForKey:@"name"];
 }
 
 - (void) dismissPopover
@@ -102,30 +124,32 @@
     [self performSelector:@selector(dismissPopover) withObject:nil afterDelay:2];
 }
 
-#pragma mark - loader
-- (void) collection:(KCSCollection *)collection didCompleteWithResult:(NSArray *)result
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    [_items removeAllObjects];
-    [_items addObjectsFromArray:result];
-    [self.industryPicker reloadComponent:0];
-    NSUInteger idx = 0;
-    for (KCSEntityDict* d in result) {
-        if ([[d objectId] isEqualToString:self.selection]) {
-            break;
-        }
-        idx++;
-    }
-    if (idx == [result count]) {
-        //for the not found case, start at top
-        idx = 0;
-    }
-    [self.industryPicker selectRow:idx inComponent:0 animated:NO];
-}
-
-- (void) collection:(KCSCollection *)collection didFailWithError:(NSError *)error 
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-}
+//#pragma mark - loader
+//- (void) collection:(KCSCollection *)collection didCompleteWithResult:(NSArray *)result
+//{
+//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+////    [_items removeAllObjects];
+////    [_items addObjectsFromArray:result];
+////    [self.industryPicker reloadComponent:0];
+////    NSUInteger idx = 0;
+////    for (NSDictionary* d in result) {
+////        if ([[d kinveyObjectId] isEqualToString:self.selection]) {
+////            break;
+////        }
+////        idx++;
+////    }
+////    if (idx == [result count]) {
+////        //for the not found case, start at top
+////        idx = 0;
+////    }
+////    if (idx < [result count]) {
+////        [self.industryPicker selectRow:idx inComponent:0 animated:NO];
+////    }
+//}
+//
+//- (void) collection:(KCSCollection *)collection didFailWithError:(NSError *)error
+//{
+//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//}
 
 @end

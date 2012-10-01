@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 #import "KinveyPersistable.h"
 #import "KCSClient.h"
+#import "KCSBlockDefs.h"
 
 /*!  Describes required selectors for requesting entities from the Kinvey Service.
 *
@@ -86,9 +87,15 @@
 */
 - (void)findEntityWithProperty: (NSString *)property matchingStringValue: (NSString *)value fromCollection: (KCSCollection *)collection withDelegate: (id<KCSEntityDelegate>)delegate;
 
-/*! Return the "_id" value for this entity
+/*! Return the client property name for the kinvey id
+ *
+ * @returns the client property name for the kinvey id
+ */
+- (NSString *)kinveyObjectIdHostProperty;
+
+/*! Return the `KCSEntityKeyId` value for this entity
 *
-* @returns the "_id" value for this entity.
+* @returns the `KCSEntityKeyId` value for this entity.
 */
 - (NSString *)kinveyObjectId;
 
@@ -112,5 +119,14 @@
 * @param delegate The delegate to notify upon completion of the load.
 */
 - (void)loadObjectWithID: (NSString *)objectID fromCollection: (KCSCollection *)collection withDelegate:(id <KCSEntityDelegate>)delegate;
+
+// Undocumented
+- (void)saveToCollection: (KCSCollection *)collection
+     withCompletionBlock: (KCSCompletionBlock)onCompletion
+       withProgressBlock: (KCSProgressBlock)onProgress;
+
+- (void)deleteFromCollection: (KCSCollection *)collection
+         withCompletionBlock: (KCSCompletionBlock)onCompletion
+           withProgressBlock: (KCSProgressBlock)onProgress;
 
 @end

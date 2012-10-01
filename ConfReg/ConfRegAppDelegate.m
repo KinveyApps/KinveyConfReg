@@ -15,10 +15,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //TODO: You must add your own AppKey and AppSecret from the Kinvey Console. See https://console.kinvey.com/#docs/iOS/iOS-Quickstart-Tutorial for more information.
-    _client = [[KCSClient sharedClient] initializeKinveyServiceForAppKey:<#My App ID#>                                                     
-                                                           withAppSecret:<#My App Secret#>
+#warning You must add your own AppKey and AppSecret from the Kinvey Console. See https://console.kinvey.com/#docs/iOS/iOS-Quickstart-Tutorial for more information.
+    _client = [[KCSClient sharedClient] initializeKinveyServiceForAppKey:@"<#My App ID#>"
+                                                           withAppSecret:@"<#My App Secret#>"
                                                             usingOptions:nil];    
+    
     return YES;
 }
 							

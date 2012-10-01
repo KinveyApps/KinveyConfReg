@@ -94,9 +94,9 @@
         // This block gets executed when the ping completes
         NSString *title;
         if (result.pingWasSuccessful){
-            title = [NSString stringWithString:@"Kinvey Ping Success :)"];
+            title = @"Kinvey Ping Success :)";
         } else {
-            title = [NSString stringWithString:@"Kinvey Ping Failed :("];
+            title = @"Kinvey Ping Failed :(";
         }
         // Log the result
         NSLog(@"%@", result.description);
@@ -132,10 +132,10 @@
 
 - (void) setSelectedPopoverObject:(id)entityObj query:(NSString*)query
 {
-    if ([entityObj isKindOfClass:[KCSEntityDict class]]) {
-        KCSEntityDict* entity = (KCSEntityDict*)entityObj;
-        NSString* value = [entity getValueForProperty:@"name"];
-        NSString* valId = [entity objectId];
+    if ([entityObj isKindOfClass:[NSDictionary class]]) {
+        NSDictionary* entity = (NSDictionary*)entityObj;
+        NSString* value = [entity valueForKey:@"name"];
+        NSString* valId = [entity kinveyObjectId];
         
         if ([query isEqualToString:@"Job-Roles"]) {
             self.role.text = value;

@@ -2,7 +2,7 @@
 //  KinveyUser.h
 //  KinveyKit
 //
-//  Copyright (c) 2008-2011, Kinvey, Inc. All rights reserved.
+//  Copyright (c) 2008-2012, Kinvey, Inc. All rights reserved.
 //
 //  This software contains valuable confidential and proprietary information of
 //  KINVEY, INC and is subject to applicable licensing agreements.
@@ -15,6 +15,7 @@
 
 @class KCSCollection;
 @class KCSRESTRequest;
+@class KCSMetadata;
 
 // Need to predefine our classes here
 @class KCSUser;
@@ -28,6 +29,22 @@ enum {
     KCSUserFound = 3,
     KCSUSerNotFound = 4
 };
+
+typedef void (^KCSUserCompletionBlock)(KCSUser* user, NSError* errorOrNil, KCSUserActionResult result);
+
+/** Social Network login providers supported for log-in
+ */
+typedef enum  {
+    /** Facebook */
+    KCSSocialIDFacebook,
+    /** Twitter */
+    KCSSocialIDTwitter,
+} KCSUserSocialIdentifyProvider;
+
+/** Access Dictionary key for the token: both Facebook & Twitter */
+#define KCSUserAccessTokenKey @"access_token"
+/** Access Dictionary key for the token secret: just Twitter */
+#define KCSUserAccessTokenSecretKey @"access_token_secret"
 
 /*!  Describes required methods for an object wishing to be notified about the status of user actions.
  *
@@ -67,6 +84,15 @@ enum {
 
 @end
 
+/** Constant for use in querying the username field */
+#define KCSUserAttributeUsername @"username"
+/** Constant for use in querying the surname field */
+#define KCSUserAttributeSurname @"last_name"
+/** Constant for use in querying the given name field */
+#define KCSUserAttributeGivenname @"first_name"
+/** Constant for use in querying the email field */
+#define KCSUserAttributeEmail @"email"
+
 
 /*! User in the Kinvey System
  
@@ -77,18 +103,42 @@ enum {
  Since all requests *must* be made through a user, the library maintains the concept of a current user, which is the
  user used to make all requests.  Convienience routines are available to manage the state of this Current User.
  
+ Like other entities, KCSUsers can have different levels of access control. The `user` collection can be made private in the Kinvey console; if it is private, users will still have four fields that can be queried publicly: username, surname, given name, and email. These can be discovered with ... 
+ 
+ Like other entities, the `metadata` property can be modified to control access on a user-by-user basis, beyond the `user` collection-wide settings. 
+ 
+ @see KCSMetadata
+ @see KCSPersistable
  */
 @interface KCSUser : NSObject <KCSPersistable>
 
 ///---------------------------------------------------------------------------------------
 /// @name User Information
 ///---------------------------------------------------------------------------------------
-/*! Username of this Kinvey User */
+/*! Username of this Kinvey User. Publicly queryable be default. */
 @property (nonatomic, copy) NSString *username;
 /*! Password of this Kinvey User */
 @property (nonatomic, copy) NSString *password;
 /*! Device Tokens of this User */
 @property (nonatomic, copy) NSArray *deviceTokens;
+/*! Session Auth Token, if available */
+@property (nonatomic, copy) NSString *sessionAuth;
+/*! Access Control Metadata of this User 
+ @see KCSPersistable
+ */
+@property (nonatomic, retain) KCSMetadata *metadata;
+/** Optional surname for the user. Publicly queryable be default. */
+@property (nonatomic, copy) NSString *surname;
+/** Optional given (first) name for the user. Publicly queryable be default. */
+@property (nonatomic, copy) NSString *givenName;
+/** Optional email address for the user. Publicly queryable be default. */
+@property (nonatomic, copy) NSString *email;
+
++ (BOOL) hasSavedCredentials;
+
+/** Clears and saved credentials from the keychain.
+ */
++ (void) clearSavedCredentials;
 
 ///---------------------------------------------------------------------------------------
 /// @name KinveyKit Internal Services
@@ -133,6 +183,15 @@ enum {
 */
 + (void)userWithUsername: (NSString *)username password: (NSString *)password withDelegate: (id<KCSUserActionDelegate>)delegate;
 
+
+/** Create a new Kinvey user and register them with the backend.
+ * @param username The username to create, if it already exists on the back-end an error will be returned.
+ * @param password The user's password
+ * @param completionBlock The callback to perform when the creation completes (or errors).
+ */
++ (void) userWithUsername:(NSString *)username password:(NSString *)password withCompletionBlock:(KCSUserCompletionBlock)completionBlock;
+
+
 ///---------------------------------------------------------------------------------------
 /// @name Managing the Current User
 ///---------------------------------------------------------------------------------------
@@ -142,6 +201,54 @@ enum {
  * @param delegate The delegate to inform once the action is complete
 */
 + (void)loginWithUsername: (NSString *)username password: (NSString *)password withDelegate: (id<KCSUserActionDelegate>)delegate;
+
+/*! Login an existing user, generates an error if the user doesn't exist
+ * @param username The username of the user
+ * @param password The user's password
+ * @param completionBlock The block that is called when the action is complete
+ */
++ (void)loginWithUsername: (NSString *)username
+                 password: (NSString *)password 
+      withCompletionBlock:(KCSUserCompletionBlock)completionBlock;
+
+/*! Login a user with a Facebook Access Token.
+ 
+ This creates a new Kinvey user or logs in with an existing one associated with the supplied Facebook access token. Kinvey will verify the token with Facebook on the server and return an authorized Kinvey user if the process is sucessful.
+ 
+ To obtain the access token, download the Facebook SDK (https://developers.facebook.com/ios/) and follow the instructions for session log-in.
+ @since 1.7
+ @deprecated 1.9 use loginWithWithSocialIdentity:accessDictionary:withCompletionBlock instead
+ @param accessToken the `access_token` provided by Facebook.
+ @param completionBlock the callback when the login completes or errors out.
+ */
++ (void)loginWithFacebookAccessToken:(NSString*)accessToken withCompletionBlock:(KCSUserCompletionBlock)completionBlock DEPRECATED_ATTRIBUTE; 
+
+/** Login a user with social network access information.
+ 
+ This creates a new Kinvey user or logs in with an existing one associated with the supplied access token. Kinvey will verify the token with the social provider on the server and return an authorized Kinvey user if the process is sucessful.
+ 
+ __Facebook:__
+ 
+ To obtain the access token, download the Facebook SDK (https://developers.facebook.com/ios/) and follow the instructions for session log-in. Once the token is obtained, provide it in a dictionary: `[KCSUser loginWithSocialIdentity:KCSSocialIDFacebook accessDictionary:{ KCSUserAccessTokenKey : <#FB Access Token#>} withCompletionBlock:<# completion block #>]`. 
+ 
+ __ Twitter: __
+ 
+ To obtain the access token, follow Twitter's instructions to independently obtain the token ( https://dev.twitter.com/docs/auth/obtaining-access-tokens ) or if you want to use the native Twitter account in iOS 5 & 6 use `+ [KCSUser getAccessDictionaryFromTwitterFromPrimaryAccount:]`. This requires use of Twitter.framewwork and Accounts.framework, and to have your app provisioned for reverse auth.  
+ 
+     [KCSUser getAccessDictionaryFromTwitterFromPrimaryAccount:^(NSDictionary *accessDictOrNil, NSError *errorOrNil) {
+        [KCSUser loginWithSocialIdentity:KCSSocialIDTwitter accessDictionary:accessDictOrNil withCompletionBlock:<# completion block #>]
+      }];
+ 
+ When using your own method for obtaining the token, Twitter requires that you provide the `oauth_token` and `oauth_token_secret` to log-in. `[KCSUser loginWithSocialIdentity:KCSSocialIDTwitter accessDictionary:{ KCSUserAccessTokenKey : <# Twitter OAuth Token #>, KCSUserAccessTokenSecretKey : <# Twitter OAuth Token Secret #>} withCompletionBlock:<# completion block #>]`.
+ 
+ Regardless of the the token is obtained, your Twitter app credentials must also be supplied when creating the KCSClient. Specify the `KCS_TWITTER_CLIENT_KEY` and `KCS_TWITTER_CLIENT_SECRET` in the options dictionary when the app is launched. These credentials are used for reverse auth and on the server side to verify the token with Twitter. 
+ 
+ @param provider the enumerated social network identity provider
+ @param accessDictionary the credentials needed to authenticate the user for log-in
+ @param completionBlock the block to be called when the operation completes or fails
+ @since 1.9
+ */
++ (void)loginWithWithSocialIdentity:(KCSUserSocialIdentifyProvider)provider accessDictionary:(NSDictionary*)accessDictionary withCompletionBlock:(KCSUserCompletionBlock)completionBlock;
 
 /*! Removes a user and their data from Kinvey
  * @param delegate The delegate to inform once the action is complete.
@@ -181,9 +288,6 @@ enum {
  * @return The KCSCollection to access users.
  */
 - (KCSCollection *)userCollection;
-
-
-
 
 
 @end

@@ -2,7 +2,6 @@
 //  ConfRegIndustryViewController.h
 //  ConfReg
 //
-//  Created by Michael Katz on 5/8/12.
 //  Copyright (c) 2012 Kinvey. All rights reserved.
 //
 
@@ -11,7 +10,7 @@
 
 @class ConfRegViewController;
 
-@interface ConfRegPickerController : UIViewController <KCSCollectionDelegate, UIPickerViewDelegate, UIPickerViewDataSource> {
+@interface ConfRegPickerController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource> {
     NSMutableArray* _items;
 }
 

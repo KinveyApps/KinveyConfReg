@@ -5,7 +5,7 @@ https://console.kinvey.com
 
 This app presents users a form to collect basic biographical information and save it to a collection in your Kinvey backend. 
 
-![](https://github.com/Kinvey/KinveyConfReg/raw/master/ConfReg_screenshot_thumb.png)
+![](https://github.com/KinveyApps/KinveyConfReg/raw/master/ConfReg_screenshot_thumb.png)
 
 To use, you'll have to create a a new app, and update "app-key" and "app-secret" in the file ConfRegAppDelegate.m
 to your app-key and app-secret from the Kinvey console.

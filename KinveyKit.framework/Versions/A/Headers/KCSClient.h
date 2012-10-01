@@ -11,13 +11,15 @@
 
 #import <Foundation/Foundation.h>
 
-#define MINIMUM_KCS_VERSION_SUPPORTED @"0.7.0"
+#define MINIMUM_KCS_VERSION_SUPPORTED @"2.0"
 
 @class KCSAnalytics;
 @class UIApplication;
 @class KCSCollection;
 @class KCSUser;
 @class KCSReachability;
+@protocol KCSStore;
+@class KCSAuthHandler;
 
 
 // Keys for options hash
@@ -27,13 +29,18 @@
 #define KCS_PORT_KEY @"kcsPortKey"
 #define KCS_SERVICE_KEY @"kcsServiceKey"
 #define KCS_CONNECTION_TIMEOUT_KEY @"kcsConnectionTimeout"
+
 #define KCS_PUSH_KEY_KEY @"kcsPushKey"
 #define KCS_PUSH_SECRET_KEY @"kcsPushSecret"
 #define KCS_PUSH_IS_ENABLED_KEY @"kcsPushEnabled"
 #define KCS_PUSH_MODE_KEY @"kcsPushMode"
 #define KCS_PUSH_DEBUG @"debug"
 #define KCS_PUSH_RELEASE @"release"
+
 #define KCS_USE_OLD_PING_STYLE_KEY @"kcsPingStyle"
+
+#define KCS_TWITTER_CLIENT_KEY @"twitterKey"
+#define KCS_TWITTER_CLIENT_SECRET @"twitterSecret"
 
 /*! A Singleton Class that provides access to all Kinvey Services.
 
@@ -212,6 +219,23 @@
  
 */
 - (KCSCollection *)collectionFromString: (NSString *)collection withClass: (Class)collectionClass;
+
+///---------------------------------------------------------------------------------------
+/// @name Store Interface
+///---------------------------------------------------------------------------------------
+- (id<KCSStore>)store: (NSString *)storeType forResource: (NSString *)resource;
+
+- (id<KCSStore>)store: (NSString *)storeType forResource: (NSString *)resource withAuthHandler: (KCSAuthHandler *)authHandler;
+
+- (id<KCSStore>)store: (NSString *)storeType
+          forResource: (NSString *)resource
+            withClass: (Class)collectionClass;
+
+- (id<KCSStore>)store: (NSString *)storeType
+          forResource: (NSString *)resource
+            withClass: (Class)collectionClass
+      withAuthHandler: (KCSAuthHandler *)authHandler;
+
 
 ///---------------------------------------------------------------------------------------
 /// @name Logging Control
