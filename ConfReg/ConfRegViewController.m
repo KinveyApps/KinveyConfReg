@@ -56,10 +56,12 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:BODY_IMAGE]];
+    
     [self clearImages]; //clear images each time the app loads to get fresh ones from the server
     [self downloadImages];
     
     [[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"clear_image"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    self.toolbar.clipsToBounds = YES;
     
     UIBarButtonItem* flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
@@ -67,11 +69,7 @@
     
     [self.toolbar setItems:[NSArray arrayWithObjects: flexSpace, restart, nil]];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kKCSReachabilityChangedNotification object:nil];
-    
-    KCSClient* client = [(ConfRegAppDelegate*)[[UIApplication sharedApplication] delegate] client];
-    KCSReachability* reachability = client.kinveyReachability;
-    [reachability startNotifier];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:KCSReachabilityChangedNotification object:nil];
 }
 
 - (void)viewDidUnload
@@ -117,6 +115,10 @@
     }];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    cell.backgroundColor = [UIColor clearColor];
+}
+
 #pragma mark - segues
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -128,7 +130,7 @@
         //This sample app uses the Job-Roles and Industries collections to populate the spinner
         [(ConfRegPickerController*) segue.destinationViewController setQuery:segue.identifier];
         
-        if ([segue.identifier isEqualToString:@"Job-Roles"]) {
+        if ([segue.identifier isEqualToString:@"jobRoles"]) {
             [(ConfRegPickerController*) segue.destinationViewController setSelection:_attendee.roleId];
         } else {
             [(ConfRegPickerController*) segue.destinationViewController setSelection:_attendee.industryId];
@@ -151,7 +153,7 @@
         NSString* value = [entity valueForKey:@"name"];
         NSString* valId = [entity kinveyObjectId];
         
-        if ([query isEqualToString:@"Job-Roles"]) {
+        if ([query isEqualToString:@"jobRoles"]) {
             self.role.text = value;
             _attendee.roleId = valId;
         } else {//TODO: check for other query values
@@ -258,40 +260,55 @@
     _attendee.twitter = twitterHandle;
     
     KCSCollection *attendees = [KCSCollection collectionFromString:@"conferenceAttendees" ofClass:[_attendee class]];
+    KCSCachedStore* store = [KCSCachedStore storeWithCollection:attendees options:@{ KCSStoreKeyCachePolicy : @(KCSCachePolicyLocalFirst)}];
     
     MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = NSLocalizedString(@"Saving to Kinvey backend", @"Saving spinner message");
     
-    // Save our instance to the collection
-    [_attendee saveToCollection:attendees withDelegate:self];
-}
-
-// This is called when the save completes successfully
-- (void)entity:(id)entity operationDidCompleteWithResult:(NSObject *)result
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+    // Save our instance to the store
+    void (^addAttendeeBlock)(void) = ^{
+        [store saveObject:_attendee withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+            if (errorOrNil == nil && objectsOrNil != nil) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saved to Kinvey Backend", @"Save complete message")
+                                                                message:nil
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Ok", @"Ok")
+                                                      otherButtonTitles:nil];
+                alert.tag = ALERT_TAG_OK;
+                [alert show];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Save failed", @"Save failed message")
+                                                                message:[errorOrNil localizedDescription]
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Ok", @"Ok")
+                                                      otherButtonTitles:nil];
+                alert.tag = ALERT_TAG_FAILED;
+                [alert show];
+            }
+        } withProgressBlock:^(NSArray *objects, double percentComplete) {
+            
+        }];
+    };
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saved to Kinvey Backend", @"Save complete message")
-                                                    message:nil
-                                                   delegate:self 
-                                          cancelButtonTitle:NSLocalizedString(@"Ok", @"Ok")
-                                          otherButtonTitles:nil];
-    alert.tag = ALERT_TAG_OK;
-    [alert show];
-}
-
-// This is called when a save fails
-- (void)entity:(id)entity operationDidFailWithError:(NSError *)error
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Save failed", @"Save failed message")
-                                                    message:[error description]
-                                                   delegate:self 
-                                          cancelButtonTitle:NSLocalizedString(@"Ok", @"Ok")
-                                          otherButtonTitles:nil];
-    alert.tag = ALERT_TAG_FAILED;
-    [alert show];
+    if (![KCSUser activeUser]) {
+        [KCSUser createAutogeneratedUser:nil completion:^(KCSUser *user, NSError *errorOrNil, KCSUserActionResult result) {
+            if (errorOrNil != nil) {
+                //failed to autocreate user
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"User creation failed"
+                                                                message:[errorOrNil localizedDescription]
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                
+                [alert show];
+            } else {
+                addAttendeeBlock();
+            }
+        }];
+    } else {
+        addAttendeeBlock();
+    }
 }
 
 - (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -306,29 +323,53 @@
 //rebuild the application. Header file must be named "header.png" and the body background is "body.png"
 - (void) downloadImages
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    void (^downloadBlock)(void) = ^{
+        [KCSFileStore downloadFileByName:@[HEADER_IMAGE,BODY_IMAGE] completionBlock:^(NSArray *downloadedResources, NSError *error) {
+            [self setImages];
+        } progressBlock:^(NSArray *objects, double percentComplete) {
+            
+        }];
+    };
     
-    NSString *headerImage = [NSString stringWithFormat:@"%@/%@", documentsDirectory, HEADER_IMAGE];
-    [KCSResourceService downloadResource:HEADER_IMAGE toFile:headerImage withResourceDelegate:self];
-    
-    NSString *bodyImage = [NSString stringWithFormat:@"%@/%@", documentsDirectory, BODY_IMAGE];
-    [KCSResourceService downloadResource:BODY_IMAGE toFile:bodyImage withResourceDelegate:self];
+    if (![KCSUser activeUser]) {
+        [KCSUser createAutogeneratedUser:nil completion:^(KCSUser *user, NSError *errorOrNil, KCSUserActionResult result) {
+            if (errorOrNil != nil) {
+                //failed to autocreate user
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"User creation failed"
+                                                                message:[errorOrNil localizedDescription]
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                
+                [alert show];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    downloadBlock();
+                });
+            }
+        }];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            downloadBlock();
+        });
+    }
 }
 
+
+// file path to cached image is NSCachesDirectory /kinvey/files/ <filename>
 - (void) setImages
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cacheDirectory = [paths objectAtIndex:0];
     
-    NSString *headerImage = [NSString stringWithFormat:@"%@/%@", documentsDirectory, HEADER_IMAGE];
+    NSString *headerImage = [NSString stringWithFormat:@"%@/kinvey/files/%@", cacheDirectory, HEADER_IMAGE];
     if ([[NSFileManager defaultManager] fileExistsAtPath:headerImage] ) {
         self.headerImageView.image = [UIImage imageWithContentsOfFile:headerImage];
     } else {
         self.headerImageView.image = [UIImage imageNamed:HEADER_IMAGE];
     }
     
-    NSString *bodyImage = [NSString stringWithFormat:@"%@/%@", documentsDirectory, BODY_IMAGE];
+    NSString *bodyImage = [NSString stringWithFormat:@"%@/kinvey/files/%@", cacheDirectory, BODY_IMAGE];
     if ([[NSFileManager defaultManager] fileExistsAtPath:bodyImage] ) {
         ((UIImageView*)self.tableView.backgroundView).image = [UIImage imageWithContentsOfFile:bodyImage];
     } else {
@@ -338,28 +379,18 @@
 
 - (void) clearImages
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cacheDirectory = [paths objectAtIndex:0];
     
-    NSString *headerImage = [NSString stringWithFormat:@"%@/%@", documentsDirectory, HEADER_IMAGE];
+    NSString *headerImage = [NSString stringWithFormat:@"%@/kinvey/files/%@", cacheDirectory, HEADER_IMAGE];
     if ([[NSFileManager defaultManager] fileExistsAtPath:headerImage] ) {
         [[NSFileManager defaultManager] removeItemAtPath:headerImage error:NULL];
     } 
     
-    NSString *bodyImage = [NSString stringWithFormat:@"%@/%@", documentsDirectory, BODY_IMAGE];
+    NSString *bodyImage = [NSString stringWithFormat:@"%@/kinvey/files/%@", cacheDirectory, BODY_IMAGE];
     if ([[NSFileManager defaultManager] fileExistsAtPath:bodyImage] ) {
          [[NSFileManager defaultManager] removeItemAtPath:bodyImage error:NULL];
     }
-}
-
-- (void)resourceServiceDidCompleteWithResult:(KCSResourceResponse *)result
-{
-    [self setImages];
-}
-
-- (void) resourceServiceDidFailWithError:(NSError *)error
-{
-    [self setImages];
 }
 
 @end

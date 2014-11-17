@@ -19,8 +19,7 @@
 
 
 #import "ConfRegPickerController.h"
-
-
+#import "ConfRegViewController.h"
 #import "MBProgressHUD.h"
 
 
@@ -68,6 +67,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     KCSCollection* industries = [KCSCollection collectionFromString:self.query ofClass:[NSMutableDictionary class]];
     KCSCachedStore* store = [KCSCachedStore storeWithCollection:industries options:@{ KCSStoreKeyCachePolicy : @(KCSCachePolicyLocalFirst)}];
     [store queryWithQuery:[KCSQuery query] withCompletionBlock:^(NSArray *result, NSError *errorOrNil) {
@@ -135,33 +135,5 @@
     self.selection = [_items objectAtIndex:row];
     [self performSelector:@selector(dismissPopover) withObject:nil afterDelay:2];
 }
-
-//#pragma mark - loader
-//- (void) collection:(KCSCollection *)collection didCompleteWithResult:(NSArray *)result
-//{
-//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-////    [_items removeAllObjects];
-////    [_items addObjectsFromArray:result];
-////    [self.industryPicker reloadComponent:0];
-////    NSUInteger idx = 0;
-////    for (NSDictionary* d in result) {
-////        if ([[d kinveyObjectId] isEqualToString:self.selection]) {
-////            break;
-////        }
-////        idx++;
-////    }
-////    if (idx == [result count]) {
-////        //for the not found case, start at top
-////        idx = 0;
-////    }
-////    if (idx < [result count]) {
-////        [self.industryPicker selectRow:idx inComponent:0 animated:NO];
-////    }
-//}
-//
-//- (void) collection:(KCSCollection *)collection didFailWithError:(NSError *)error
-//{
-//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//}
 
 @end

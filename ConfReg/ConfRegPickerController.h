@@ -19,7 +19,6 @@
 
 
 #import <UIKit/UIKit.h>
-#import "ConfRegViewController.h"
 
 @class ConfRegViewController;
 

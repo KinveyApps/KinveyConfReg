@@ -24,7 +24,7 @@
 
 @class ConferenceAttendee;
 
-@interface ConfRegViewController : UITableViewController <KCSPersistableDelegate, KCSResourceDelegate, UITextFieldDelegate, UIAlertViewDelegate> {
+@interface ConfRegViewController : UITableViewController <UITextFieldDelegate, UIAlertViewDelegate> {
     __weak UIPopoverController* _popover;
     ConferenceAttendee* _attendee;
 }

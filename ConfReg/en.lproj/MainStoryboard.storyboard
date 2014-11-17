@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D2001" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="TOw-yD-6BP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" variant="6xAndEarlier" propertyAccessControl="none" promptedForUpgradeToXcode5="NO" initialViewController="TOw-yD-6BP">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <development defaultVersion="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
+        <deployment identifier="iOS"/>
+        <development version="4600" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
         <!--Conf Reg View Controller-->
         <scene sceneID="5sx-5S-spP">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="nX4-DB-aU4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="TOw-yD-6BP" customClass="ConfRegViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="NiC-ot-APd">
                         <rect key="frame" x="0.0" y="20" width="1024" height="748"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="8c9-Mr-4WI" userLabel="Header">
                             <rect key="frame" x="0.0" y="0.0" width="1024" height="76"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -25,7 +23,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </imageView>
                                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="GEq-2i-ZbT">
-                                    <rect key="frame" x="0.0" y="16" width="1024" height="44"/>
+                                    <rect key="frame" x="0.0" y="20" width="1024" height="44"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     <items/>
                                 </toolbar>
@@ -39,7 +37,7 @@
                                         <rect key="frame" x="0.0" y="76" width="1024" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="John H. Appleseed" minimumFontSize="17" clearButtonMode="whileEditing" id="upe-Po-Hqh">
@@ -73,7 +71,7 @@
                                         <rect key="frame" x="0.0" y="120" width="1024" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Email:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="vro-fI-uga">
@@ -107,7 +105,7 @@
                                         <rect key="frame" x="0.0" y="164" width="1024" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="@" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="KyD-Zh-bOH">
@@ -141,7 +139,7 @@
                                         <rect key="frame" x="0.0" y="208" width="1024" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Appleseed Corp." minimumFontSize="17" clearButtonMode="whileEditing" id="TKL-jD-AyO">
@@ -168,7 +166,7 @@
                                         <rect key="frame" x="0.0" y="252" width="1024" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Job Role:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="IMo-VJ-onJ">
@@ -196,7 +194,7 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <segue destination="7yh-pG-F0M" kind="popover" identifier="Job-Roles" popoverAnchorView="5Hg-NF-3LY" id="6ir-As-ugE">
+                                                        <segue destination="7yh-pG-F0M" kind="popover" identifier="jobRoles" popoverAnchorView="5Hg-NF-3LY" id="6ir-As-ugE">
                                                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                                         </segue>
                                                     </connections>
@@ -209,7 +207,7 @@
                                         <rect key="frame" x="0.0" y="296" width="1024" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Industry:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="cnE-7k-3dx">
@@ -237,7 +235,7 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <segue destination="7yh-pG-F0M" kind="popover" identifier="Industries" popoverAnchorView="5Hg-NF-3LY" id="97b-LM-aXw">
+                                                        <segue destination="7yh-pG-F0M" kind="popover" identifier="industries" popoverAnchorView="5Hg-NF-3LY" id="97b-LM-aXw">
                                                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                                         </segue>
                                                     </connections>
@@ -250,7 +248,7 @@
                                         <rect key="frame" x="0.0" y="340" width="1024" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="59"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1024" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" id="1Zb-Rm-S7G">
@@ -295,13 +293,13 @@
                         <outlet property="userName" destination="upe-Po-Hqh" id="vXa-uR-EMY"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nX4-DB-aU4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="37" y="205"/>
         </scene>
         <!--Conf Reg Picker Controller-->
         <scene sceneID="FCf-o4-zja">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="D8n-Ix-mUF" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="7yh-pG-F0M" customClass="ConfRegPickerController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FzM-JU-yKq">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="215"/>
@@ -317,13 +315,13 @@
                             </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <connections>
                         <outlet property="IndustryPicker" destination="LhQ-zg-LFF" id="lCh-gX-W6W"/>
                         <outlet property="industryPicker" destination="LhQ-zg-LFF" id="cwF-70-PRr"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="D8n-Ix-mUF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1051" y="225"/>
         </scene>
@@ -333,29 +331,6 @@
         <image name="buttonbg_selected" width="16" height="16"/>
         <image name="header.png" width="1024" height="76"/>
     </resources>
-    <classes>
-        <class className="ConfRegPickerController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfRegPickerController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="industryPicker" candidateClass="UIPickerView"/>
-            </relationships>
-        </class>
-        <class className="ConfRegViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfRegViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="saveAttendee"/>
-                <relationship kind="outlet" name="company" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="email" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="headerImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="industry" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="role" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="saveButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="twitter" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="userName" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation" orientation="landscapeRight"/>
