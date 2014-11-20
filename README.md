@@ -1,7 +1,7 @@
 # Kinvey ConfReg
 
 This is a Kinvey sample app to collect attendee data at a conference, to use make an account on
-https://console.kinvey.com
+[Kinvey Console](https://console.kinvey.com)
 
 This app presents users a form to collect basic biographical information and save it to a collection in your Kinvey backend. 
 
@@ -9,7 +9,7 @@ This app presents users a form to collect basic biographical information and sav
 
 To use, you'll have to create a a new app, and update "app-key" and "app-secret" in the file ConfRegAppDelegate.m
 to your app-key and app-secret from the Kinvey console.
-See https://console.kinvey.com/#docs/iOS/iOS-Quickstart-Tutorial for more information.
+See [](http://devcenter.kinvey.com/ios/guides/getting-started) for more information.
 
 For the best experience, you will need to pre-populate the following data in the console:
 
@@ -24,7 +24,7 @@ This sample application is designed for iOS 5+, and uses storyboards and ARC.
 
 ## License
 
-Copyright (c) 2013 Kinvey, Inc.
+Copyright (c) 2014 Kinvey, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
