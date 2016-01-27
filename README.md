@@ -9,7 +9,7 @@ This app presents users a form to collect basic biographical information and sav
 
 To use, you'll have to create a a new app, and update "app-key" and "app-secret" in the file ConfRegAppDelegate.m
 to your app-key and app-secret from the Kinvey console.
-See https://console.kinvey.com/#docs/iOS/iOS-Quickstart-Tutorial for more information.
+See http://devcenter.kinvey.com/ios/guides/getting-started# for more information.
 
 For the best experience, you will need to pre-populate the following data in the console:
 
