@@ -20,6 +20,8 @@ For the best experience, you will need to pre-populate the following data in the
  * header.png (header image, 1024 x 72)
  * body.png (background image, 1024 x 672)
 
+The "Industry" and "Job Role" data that we populate in the console will be used by ConfReg app to populate Industry and Job Role dropdowns in the app.
+
 This sample application is designed for iOS 5+, and uses storyboards and ARC. 
 
 ## License
