@@ -11,7 +11,7 @@ To use, you'll have to create a a new app, and update "app-key" and "app-secret"
 to your app-key and app-secret from the Kinvey console.
 See http://devcenter.kinvey.com/ios/guides/getting-started# for more information.
 
-For the best experience, you will need to pre-populate the following data in the console:
+For the best experience, you will need to pre-populate the following data in the console (For populating "Industry" and "Job Role" data in the console using csv files, you will need to import those files using Import functionality present in Data-> Settings-> Import) :
 
 * Collections (sample data in the `Sample Data` folder)
  * Industries (can import from `Industries.csv`)
